@@ -7,11 +7,14 @@ def runPostMethod(method, payload=None):
     url = fi.getValue("base_url")
     apiKey = fi.getValue("api_key")
     completeUrl = url + apiKey + "/" + method
-    response = requests.get(completeUrl, payload)
     try:
+        response = requests.get(completeUrl, payload)
         jsonResponse = json.loads(response.text)
     except ValueError:
         print(method + " produced invalid JSON")
+        jsonResponse = None
+    except requests.exceptions.SSLError:
+        print(method + " recvieved an SSL Error")
         jsonResponse = None
     return jsonResponse
 
